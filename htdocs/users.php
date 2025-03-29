@@ -65,15 +65,15 @@ if (!$result) {
         </tr>
         <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?= isset($row['id']) ? $row['id'] : 'N/A'; ?></td>
+                <td><?= isset($row['id']) ? $row['Id'] : 'N/A'; ?></td>
                 <td><?= isset($row['Name']) ? $row['Name'] : 'N/A'; ?></td>
                 <td><?= isset($row['Email']) ? $row['Email'] : 'N/A'; ?></td>
                 <td><?= isset($row['Role']) ? $row['Role'] : 'N/A'; ?></td>
                 <td><?= isset($row['Phone']) ? $row['Phone'] : 'N/A'; ?></td>
                 <td><?= isset($row['Address']) ? $row['Address'] : 'N/A'; ?></td>
                 <td>
-                    <a href="edit_user.php?id=<?= $row['id']; ?>" class="edit-btn">Edit</a>
-                    <a href="users.php?delete=<?= $row['id']; ?>" class="delete-btn" onclick="return confirm('Are you sure?');">Delete</a>
+                    <a href="edit_user.php?id=<?= $row['Id']; ?>" class="edit-btn">Edit</a>
+                    <a href="users.php?delete=<?= $row['Id']; ?>" class="delete-btn" onclick="return confirm('Are you sure?');">Delete</a>
                 </td>
             </tr>
         <?php endwhile; ?>

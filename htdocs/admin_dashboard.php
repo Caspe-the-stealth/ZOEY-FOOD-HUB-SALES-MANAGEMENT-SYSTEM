@@ -16,6 +16,7 @@
         <ul>
             <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
             <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales Records</a></li>

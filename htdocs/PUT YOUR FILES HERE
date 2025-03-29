@@ -30,3 +30,21 @@ index.php → Homepage
 style.css → For styling
 
 script.js → JavaScript functions
+
+
+
+[orders.php]
+ORDER HISTORY
+
+Order ID	Product Name	Quantity	Price	Order Date	Total Payment	Status
+
+Home Foods Cart History Log Out
+
+
+[customers]
+Orders Customer
+
+Customer Name	Order Date	Product Name (Quantity)	Total Payment	Status
+
+[entity]
+customers → orders (One-to-Many)
