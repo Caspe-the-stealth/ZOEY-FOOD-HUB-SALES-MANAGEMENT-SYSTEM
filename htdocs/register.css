@@ -1,0 +1,59 @@
+/* Container styling */
+.container {
+    width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+}
+
+/* Form styling */
+form {
+    width: 100%;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+table tr td {
+    padding: 8px;
+}
+
+/* Input and select styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Button styling */
+button {
+    width: 100%;
+    padding: 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #218838;
+}
+
+/* Additional responsiveness */
+@media screen and (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+}

@@ -1,0 +1,127 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212; /* Deep black */
+    color: #E0E0E0; /* Light gray text */
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #1A1A1A; /* Dark charcoal */
+    height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar .logo {
+    width: 140px;
+    margin-bottom: 25px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar ul li {
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #CCCCCC; /* Light gray text */
+    text-decoration: none;
+    font-size: 17px;
+    transition: 0.3s ease-in-out;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #333333; /* Medium-dark gray */
+    color: #FFFFFF;
+}
+
+.sidebar ul li a i {
+    margin-right: 12px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 280px;
+    padding: 30px;
+    width: calc(100% - 280px);
+    background: #181818; /* Darker gray */
+    min-height: 100vh;
+}
+
+h2 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form Styling */
+form {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+    color: #222;
+    font-size: 14px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+    height: 80px;
+}
+
+/* Button Styling */
+button {
+    background: black;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #333;
+}

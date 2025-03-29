@@ -1,0 +1,32 @@
+Authentication (User Login/Registration)
+register.php → User signup
+
+login.php → User login
+
+logout.php → Log out users
+
+2️⃣ Database Connection
+db_connection.php → Connects to MySQL database
+
+3️⃣ Admin Panel
+dashboard.php → Overview of sales, orders, users, product
+
+manage_users.php → Add, delete, update users
+
+manage_products.php → Add, edit, remove food items
+
+manage_orders.php → Track and manage food orders
+
+4️⃣ Customer Functions
+menu.php → Displays food items for ordering
+
+order.php → Allows customers to place orders
+
+cart.php → Shopping cart functionality
+
+5️⃣ Miscellaneous
+index.php → Homepage
+
+style.css → For styling
+
+script.js → JavaScript functions

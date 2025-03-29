@@ -1,0 +1,128 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: #1E1E1E; /* Dark gray background */
+    color: #E0E0E0; /* Light text */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #0D0D0D; /* Almost black */
+    height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar .logo {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar ul li {
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #B0B0B0; /* Light gray text */
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.sidebar ul li a:hover, .sidebar ul li a.active {
+    background: #262626; /* Dark gray */
+    color: #FFFFFF;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 280px;
+    padding: 30px;
+    flex-grow: 1;
+    width: calc(100% - 280px);
+    background: #252525; /* Dark gray */
+    min-height: 100vh;
+}
+
+header {
+    background: #181818; /* Darker header */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Stats Cards */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stats-card {
+    background: #2C2C2C; /* Slightly lighter gray */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card h2 {
+    margin: 0;
+    color: #E0E0E0; /* Light gray text */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.stats-card p {
+    font-size: 26px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #FFFFFF;
+}
+
+/* Footer */
+footer {
+    width: 100%;
+    background: #2C2C2C;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-top: 0 4px 8px rgba(0,0,0,0.3);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
