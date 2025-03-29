@@ -60,9 +60,9 @@ body {
 
 /* Main Content */
 .main-content {
-    margin-left: 280px;
+    margin-left: 200px; /* Updated to match sidebar width */
     padding: 30px;
-    width: calc(100% - 280px);
+    width: calc(100% - 240px); /* Adjusted to balance the screen */
     background: #181818; /* Darker gray */
     min-height: 100vh;
 }
@@ -182,14 +182,3 @@ label {
     color: black;
     font-size: 16px;
 }
-
-
-
-
-
-
-
-
-
-
-

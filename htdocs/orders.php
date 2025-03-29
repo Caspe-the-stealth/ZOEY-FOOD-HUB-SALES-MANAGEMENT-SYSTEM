@@ -96,7 +96,7 @@ if (!$result) {
             <option value="Paid">Paid</option>
             <option value="Refunded">Refunded</option>
         </select>
-        <input type="text" name="delivery_address" placeholder="Delivery Address" required>
+        <input type="text" name="address" placeholder="Address" required>
         <input type="number" name="user_id" placeholder="User ID" required>
         <button type="submit" name="add_order">Add Order</button>
     </form>
@@ -108,7 +108,7 @@ if (!$result) {
             <th>Total Amount</th>
             <th>Order Status</th>
             <th>Payment Status</th>
-            <th>Delivery Address</th>
+            <th>Address</th>
             <th>User ID</th>
             <th>Actions</th>
         </tr>
