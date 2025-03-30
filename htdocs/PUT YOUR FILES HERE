@@ -33,7 +33,7 @@ script.js → JavaScript functions
 
 
 
-[orders.php]
+[sales.php]
 ORDER HISTORY
 
 Order ID	Product Name	Quantity	Price	Order Date	Total Payment	Status

@@ -263,12 +263,14 @@ $cart_count = isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : 0;
                 <p><strong>₱<?= number_format($row['Price'], 2); ?></strong></p>
                 <p class="stock">Stock: <?= $row['Stock_Quantity']; ?> available</p>
                 <form method="POST" action="cart.php">
-                    <input type="hidden" name="product_id" value="<?= $row['Product_ID']; ?>">
-                    <input type="number" name="quantity" value="1" min="1" max="<?= $row['Stock_Quantity']; ?>" required>
-                    <button type="submit" name="add_to_cart" <?= ($row['Stock_Quantity'] == 0) ? 'disabled' : ''; ?>>
-                        <?= ($row['Stock_Quantity'] == 0) ? 'Out of Stock' : 'Buy Food'; ?>
-                    </button>
-                </form>
+    <input type="hidden" name="product_id" value="<?= $row['Product_ID']; ?>">
+    <input type="hidden" name="product_name" value="<?= htmlspecialchars($row['Name']); ?>">
+    <input type="hidden" name="price" value="<?= $row['Price']; ?>">
+    <input type="number" name="quantity" value="1" min="1" max="<?= $row['Stock_Quantity']; ?>" required>
+    <button type="submit" name="add_to_cart" <?= ($row['Stock_Quantity'] == 0) ? 'disabled' : ''; ?>>
+        <?= ($row['Stock_Quantity'] == 0) ? 'Out of Stock' : 'Buy Food'; ?>
+    </button>
+</form>
             </div>
         <?php endwhile; ?>
     </div>
