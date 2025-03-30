@@ -1,30 +1,27 @@
 <?php
 session_start();
-ob_start(); // Start output buffering
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 include 'db_connection.php';
-ob_end_clean(); // Clear any output from db_connection.php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize inputs
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = trim($_POST['password']);
     $role = strtolower(trim($_POST['role']));
 
-    // Check if all fields are filled
     if (empty($email) || empty($password) || empty($role)) {
         $_SESSION['error'] = "All fields are required!";
-        header("Location: login.php");
+        header("Location: index.php");
         exit;
     }
 
-    // Ensure role is either admin or customer
-    if (!in_array($role, ['admin', 'customer'])) {
+    if ($role !== 'admin') {
         $_SESSION['error'] = "Invalid role selected.";
-        header("Location: login.php");
+        header("Location: index.php");
         exit;
     }
 
-    // Fetch user from database
     $query = "SELECT id, email, password, role FROM users WHERE email = ? AND role = ?";
     if ($stmt = $conn->prepare($query)) {
         $stmt->bind_param("ss", $email, $role);
@@ -33,28 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            $dbRole = strtolower($user['role']);
-
-            // Debugging - Print fetched role
-            echo "Role from DB: " . $dbRole . "<br>";
-            echo "Hashed Password from DB: " . $user['password'] . "<br>";
 
             if (password_verify($password, $user['password'])) {
-                // Successful login
                 session_regenerate_id(true);
                 $_SESSION['id'] = $user['id'];
                 $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $dbRole;
-
-                // Corrected role-based redirection
-                if ($dbRole === 'admin') {
-                    header("Location: admin_dashboard.php");
-                } elseif ($dbRole === 'customer') {
-                    header("Location: menu.php");
-                } else {
-                    $_SESSION['error'] = "Invalid role!";
-                    header("Location: login.php");
-                }
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['success'] = "Logged in successfully as Admin";
+                header("Location: admin_dashboard.php");
                 exit;
             } else {
                 $_SESSION['error'] = "Incorrect password.";
@@ -64,10 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmt->close();
     } else {
-        $_SESSION['error'] = "Database error. Try again later.";
+        $_SESSION['error'] = "Database error: " . $conn->error;
     }
+
     $conn->close();
-    header("Location: login.php");
+    header("Location: index.php");
     exit;
 }
 ?>
@@ -87,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfcUSWUcPhTrxvU7aPv1O7WGN2j_ZskYB9MA&s" alt="Company Logo" class="logo">
         <h2>Login to Your Account</h2>
 
-        <form action="login.php" method="post">
+        <form action="index.php" method="post">
             <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="email" placeholder="Enter your email" required>
@@ -99,18 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-              
                 <select name="role" required>
-                   
+                    <option value="">Select Role</option>
                     <option value="admin">Admin</option>
-                   
                 </select>
             </div>
 
             <button type="submit">Login</button>
         </form>
-
-     
     </div>
 </div>
 
@@ -129,7 +109,6 @@ body {
     height: 100vh;
 }
 
-/* Full centering for login box */
 .login-container {
     display: flex;
     justify-content: center;
@@ -138,26 +117,23 @@ body {
     width: 100%;
 }
 
-/* Stylish login box */
 .login-box {
     background: #ffffff;
     padding: 40px;
     width: 100%;
-    max-width: 400px; /* Ensures form is not too wide */
+    max-width: 400px;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     text-align: center;
     color: #000;
 }
 
-/* Logo styling */
 .logo {
     width: 90px;
     height: auto;
     margin-bottom: 15px;
 }
 
-/* Titles */
 h2 {
     margin-bottom: 10px;
     font-size: 22px;
@@ -165,13 +141,6 @@ h2 {
     color: #222;
 }
 
-.subtitle {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-/* Form styling */
 .form-group {
     text-align: left;
     margin-bottom: 15px;
@@ -203,7 +172,6 @@ h2 {
     border-color: #000;
 }
 
-/* Submit Button */
 button[type="submit"] {
     width: 100%;
     padding: 12px;
@@ -221,31 +189,14 @@ button[type="submit"]:hover {
     background-color: #333;
 }
 
-/* Footer text */
-.footer-text {
-    margin-top: 15px;
-    font-size: 13px;
-    color: #555;
-}
-
-.footer-text a {
-    color: #000;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.footer-text a:hover {
-    text-decoration: underline;
-}
-
 .logo {
-    width: 90px;  /* Adjust size as needed */
-    height: 90px; /* Ensure equal width & height */
-    border-radius: 50%; /* Makes it circular */
-    object-fit: cover; /* Ensures image fits well */
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
     display: block;
-    margin: 0 auto; /* Center the logo */
-    border: 3px solid #000; /* Black border */
+    margin: 0 auto;
+    border: 3px solid #000;
 }
 </style>
 

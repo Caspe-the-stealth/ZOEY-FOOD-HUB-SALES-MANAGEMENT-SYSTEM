@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'db_connection.php';
 
 // Fetch total customers count
@@ -19,8 +20,27 @@ if ($resultTotalOrders) {
     $totalOrders = $row['total'];
 }
 
-// Similarly, you can fetch other totals (Total Sales, Total Orders, etc.) here
-// For example: $queryTotalOrders = "SELECT COUNT(*) AS total FROM orders"; ...
+// Fetch total sales from completed orders
+$queryTotalSales = "SELECT SUM(Total_Amount) AS total_sales FROM orders WHERE Order_Status = 'Completed'";
+$resultTotalSales = $conn->query($queryTotalSales);
+$totalSales = 0;
+if ($resultTotalSales) {
+    $row = $resultTotalSales->fetch_assoc();
+    $totalSales = $row['total_sales'];
+}
+
+// Fetch best sales product (aggregated by total sales)
+$queryBestProduct = "SELECT p.Name AS product_name, SUM(o.Total_Amount) AS total_product_sales 
+                      FROM orders o 
+                      JOIN products p ON o.Product_ID = p.Product_ID 
+                      WHERE o.Order_Status = 'Completed'
+                      GROUP BY p.Product_ID
+                      ORDER BY total_product_sales DESC LIMIT 1";
+$resultBestProduct = $conn->query($queryBestProduct);
+$bestProduct = "None";
+if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
+    $bestProduct = $row['product_name'] . " (₱" . number_format($row['total_product_sales'], 2) . ")";
+}
 
 ?>
 <!DOCTYPE html>
@@ -139,12 +159,20 @@ if ($resultTotalOrders) {
             color: #F0F0F0;
             margin-bottom: 20px;
         }
+        .notification {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="logo-container">
-            <img src="images (1).png" alt="Zoey Food Hub Logo" class="logo">
+        <img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
             <h2>ZOEY FOOD HUB</h2>
         </div>
         <ul>
@@ -153,10 +181,13 @@ if ($resultTotalOrders) {
             <li><a href="product.php"><i class="fas fa-box"></i> Products</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
             <li><a href="sales.php"><i class="fas fa-chart-pie"></i> Sales Records</a></li>
-            <li><a href="login.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="index.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
     <div class="main-content">
+        <?php if(isset($_SESSION['success'])): ?>
+            <div class="notification"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
         <section class="stats">
             <div class="stats-card">
                 <h2>Total Sales</h2>

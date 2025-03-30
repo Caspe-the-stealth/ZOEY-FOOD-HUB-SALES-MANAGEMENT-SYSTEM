@@ -268,8 +268,8 @@ while ($row = $categoryResult->fetch_assoc()) {
 <body>
   <div class="sidebar">
     <div class="logo-container">
-      <img src="images (1).png" alt="Zoey Food Hub Logo" class="logo">
-      <h1>ZOEY FOOD HUB</h1>
+    <img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
+      <h2>ZOEY FOOD HUB</h2>
     </div>
     <ul>
       <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>

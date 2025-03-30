@@ -2,6 +2,7 @@
 session_start();
 include 'db_connection.php'; // Ensure this file connects to your database
 
+
 // Handle product addition to cart (if coming from, for example, a product list)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
     $product_id    = $_POST['product_id'];
@@ -57,140 +58,207 @@ $best_sale = mysqli_fetch_assoc($best_sale_result);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Records</title>
-    <link rel="stylesheet" href="sales.css">
-    <style>
-        /* Simple styling - adjust as needed */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .sidebar {
-            width: 250px;
-            background: #1E1E1E;
-            height: 100vh;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
-        }
-        .sidebar .logo {
-             width: 150px;
-             height: 150px;
-             border-radius: 50%;
-             object-fit: cover;
-             display: block;
-             margin: auto;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar li {
-            margin-bottom: 15px;
-        }
-        .sidebar a {
-            color: #fff;
-            text-decoration: none;
-        }
-        .main-content {
-            margin-left: 240px;
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        .notification {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 12px;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
-            text-align: center;
-        }
-        form.status-form select {
-            padding: 4px;
-            font-size: 14px;
-        }
-        form.status-form button {
-            padding: 4px 8px;
-            font-size: 14px;
-            margin-left: 8px;
-        }
-        .summary {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 15px;
-            background: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            text-align: center;
-            color: #333;
-        }
-        /* Rounded Logo */
-.sidebar .logo {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%; /* Makes the image fully rounded */
-  object-fit: cover;  /* Ensures image fills and maintains aspect ratio */
-  display: block;
-  margin: auto;
-}
-.logo {
-    width: 150px; /* Adjust size as needed */
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-    margin: auto;
-}
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<style>
+/* Customized styling for Sales Page */
+.main-content {
+    margin-left: 270px;
+    padding: 30px;
+    width: calc(100% - 270px);
+    background: #181818;
+    min-height: 100vh;
+    color: #E0E0E0;
+}
+
+h2 {
+    text-align: center;
+    color: #F0F0F0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+/* New sticky Sales Summary styling */
+.sales-summary-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #181818; /* Same as main background for consistency */
+    padding-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* Adjusted Sales Summary Styling */
+.summary {
+    display: inline-block;
+    background: #242424;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 2px 2px 15px rgba(255, 255, 255, 0.1);
+}
+
+.summary h3 {
+    margin-top: 0;
+    color: #FFFFFF;
+}
+
+.summary p {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #CCCCCC;
+}
+
+/* Notification Styling */
+.notification {
+    background: #2D2D2D;
+    padding: 10px 20px;
+    border-left: 3px solid #4DA8DA;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    color: #E0E0E0;
+}
+
+/* Table Styling Consistency */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #222;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead th {
+    background-color: #444;
+    color: #FFFFFF;
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+}
+
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #333;
+    color: #E0E0E0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #2A2A2A;
+}
+
+tbody tr:hover {
+    background-color: #3A3A3A;
+}
+  /* General Styles */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar improvements */
+.sidebar {
+    width: 250px;
+    background: #1E1E1E;
+    height: 100vh;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease;
+}
+
+.sidebar:hover {
+    background: #171717;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar ul li {
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 14px 25px;
+    color: #CCCCCC;
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s, color 0.3s;
+    border-left: 3px solid transparent;
+}
+
+/* Updated sidebar link hover/active styles for smoother transition */
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #2F2F2F; // Softer background
+    color: #E0E0E0;      // Softer text color
+    font-weight: normal; // Avoid harsh boldness
+    border-left: 3px solid #5C5C5C; // Subtle border highlight
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 270px;
+    padding: 30px;
+    width: calc(100% - 270px);
+    background: #181818;
+    min-height: 100vh;
+}
+
+
+</style>
+
+
 
 <div class="sidebar">
-    <div class="logo-container">
-    <img src="images (1).png" alt="Zoey Food Hub Logo" style="width:250px; height:100px; border-radius:80%; object-fit:cover; display:block; margin:auto;">
-
-        <h2>ZOEY FOOD HUB</h2>
+<div class="logo-container">
+<img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
+            <h2>ZOEY FOOD HUB</h2>
+        </div>
+        <ul>
+            <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
+            <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
+            <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
+            <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales Records</a></li>
+            <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
+        </ul>
     </div>
-    <ul>
-        <li><a href="admin_dashboard.php">Dashboard</a></li>
-        <li><a href="users.php">Users</a></li>
-        <li><a href="product.php">Product</a></li>
-        <li><a href="orders.php">Orders</a></li>
-        <li><a href="sales.php">Sales Records</a></li>
-        <li><a href="login.php">Logout</a></li>
-    </ul>
-</div>
 
 <div class="main-content">
    <h2>Sales Records</h2>
-   <!-- NEW: Sales Summary Headers -->
-   <div class="summary">
-       <h3>Sales Summary</h3>
-       <p><strong>Total Sales:</strong> ₱<?php echo number_format($total_sales, 2); ?></p>
-       <?php if ($best_sale): ?>
-         <p>
-             <strong>Best Sale:</strong> Order <?php echo htmlspecialchars($best_sale['Order_ID']); ?> - 
-             <?php echo htmlspecialchars($best_sale['product_name']); ?> (₱<?php echo number_format($best_sale['Total_Amount'], 2); ?> on <?php echo htmlspecialchars($best_sale['Order_Date']); ?>)
-         </p>
-       <?php endif; ?>
-   </div>
    <!-- Display notification if available -->
    <?php
    if (isset($_SESSION['success'])) {
@@ -198,7 +266,20 @@ $best_sale = mysqli_fetch_assoc($best_sale_result);
        unset($_SESSION['success']);
    }
    ?>
-    <table>
+   <!-- Place Sales Summary immediately above the table -->
+   <div class="sales-summary-wrapper">
+       <div class="summary">
+           <h3>Sales Summary</h3>
+           <p><strong>Total Sales:</strong> ₱<?php echo number_format($total_sales, 2); ?></p>
+           <?php if ($best_sale): ?>
+             <p>
+                 <strong>Best Sale:</strong> Order <?php echo htmlspecialchars($best_sale['Order_ID']); ?> - 
+                 <?php echo htmlspecialchars($best_sale['product_name']); ?> (₱<?php echo number_format($best_sale['Total_Amount'], 2); ?> on <?php echo htmlspecialchars($best_sale['Order_Date']); ?>)
+             </p>
+           <?php endif; ?>
+       </div>
+   </div>
+   <table>
         <tr>
             <th>Order ID</th>
             <th>Product Name</th>

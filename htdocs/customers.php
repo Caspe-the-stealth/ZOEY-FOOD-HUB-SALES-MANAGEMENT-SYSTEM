@@ -317,7 +317,7 @@ h3.form-title {
 
 <div class="sidebar">
 <div class="logo-container">
-<img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
+<img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
             <h2>ZOEY FOOD HUB</h2>
         </div>
         <ul>
