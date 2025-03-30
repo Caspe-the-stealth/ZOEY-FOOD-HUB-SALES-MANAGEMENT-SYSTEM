@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="login-container">
     <div class="login-box">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfcUSWUcPhTrxvU7aPv1O7WGN2j_ZskYB9MA&s" alt="Company Logo" class="logo">
-        <h2>Login to Your Account</h2>
+        <h2>ZOEY FOOD HUB</h2>
 
         <form action="index.php" method="post">
             <div class="form-group">
