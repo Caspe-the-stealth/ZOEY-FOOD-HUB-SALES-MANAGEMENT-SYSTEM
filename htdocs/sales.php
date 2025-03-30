@@ -29,11 +29,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
     exit();
 }
 
-// Query all orders (sales records)
-// You can adjust the query as needed. Here we assume the orders table contains
-// columns: order_id, product_name, quantity, price, order_date, total_payment, status
-$order_query  = "SELECT * FROM orders";
+// Query only completed orders (sales records) joined with products to get product name
+$order_query  = "SELECT o.Order_ID, p.Name AS product_name, o.Total_Amount, o.Order_Date, o.Order_Status 
+                  FROM orders o 
+                  JOIN products p ON o.Product_ID = p.Product_ID 
+                  WHERE o.Order_Status = 'Completed'";
 $order_result = mysqli_query($conn, $order_query);
+
+// NEW: Query for Total Sales
+$total_sales_query = "SELECT SUM(Total_Amount) AS total_sales FROM orders WHERE Order_Status = 'Completed'";
+$total_sales_result = mysqli_query($conn, $total_sales_query);
+$total_sales_row = mysqli_fetch_assoc($total_sales_result);
+$total_sales = $total_sales_row['total_sales'];
+
+// NEW: Query for Best Sale (order with highest Total_Amount)
+$best_sale_query = "SELECT o.Order_ID, p.Name AS product_name, o.Total_Amount, o.Order_Date 
+                    FROM orders o 
+                    JOIN products p ON o.Product_ID = p.Product_ID 
+                    WHERE o.Order_Status = 'Completed'
+                    ORDER BY o.Total_Amount DESC LIMIT 1";
+$best_sale_result = mysqli_query($conn, $best_sale_query);
+$best_sale = mysqli_fetch_assoc($best_sale_result);
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,12 +66,26 @@ $order_result = mysqli_query($conn, $order_query);
             padding: 0;
         }
         .sidebar {
-            width: 220px;
+            width: 250px;
+            background: #1E1E1E;
             height: 100vh;
-            background: #333;
-            float: left;
-            color: #fff;
-            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
+        }
+        .sidebar .logo {
+             width: 150px;
+             height: 150px;
+             border-radius: 50%;
+             object-fit: cover;
+             display: block;
+             margin: auto;
         }
         .sidebar ul {
             list-style: none;
@@ -101,28 +131,66 @@ $order_result = mysqli_query($conn, $order_query);
             font-size: 14px;
             margin-left: 8px;
         }
+        .summary {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            text-align: center;
+            color: #333;
+        }
+        /* Rounded Logo */
+.sidebar .logo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Makes the image fully rounded */
+  object-fit: cover;  /* Ensures image fills and maintains aspect ratio */
+  display: block;
+  margin: auto;
+}
+.logo {
+    width: 150px; /* Adjust size as needed */
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: auto;
+}
     </style>
 </head>
 <body>
 
 <div class="sidebar">
     <div class="logo-container">
-        <img src="logo.png" alt="Zoey Food Hub Logo" class="logo" style="width:80%;">
+    <img src="images (1).png" alt="Zoey Food Hub Logo" style="width:250px; height:100px; border-radius:80%; object-fit:cover; display:block; margin:auto;">
+
         <h2>ZOEY FOOD HUB</h2>
     </div>
     <ul>
-        <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
-        <li><a href="product.php"><i class="fas fa-box"></i> Product</a></li>
-        <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
-        <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales</a></li>
-        <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-        <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
+        <li><a href="admin_dashboard.php">Dashboard</a></li>
+        <li><a href="users.php">Users</a></li>
+        <li><a href="product.php">Product</a></li>
+        <li><a href="orders.php">Orders</a></li>
+        <li><a href="sales.php">Sales Records</a></li>
+        <li><a href="login.php">Logout</a></li>
     </ul>
 </div>
 
 <div class="main-content">
    <h2>Sales Records</h2>
+   <!-- NEW: Sales Summary Headers -->
+   <div class="summary">
+       <h3>Sales Summary</h3>
+       <p><strong>Total Sales:</strong> ₱<?php echo number_format($total_sales, 2); ?></p>
+       <?php if ($best_sale): ?>
+         <p>
+             <strong>Best Sale:</strong> Order <?php echo htmlspecialchars($best_sale['Order_ID']); ?> - 
+             <?php echo htmlspecialchars($best_sale['product_name']); ?> (₱<?php echo number_format($best_sale['Total_Amount'], 2); ?> on <?php echo htmlspecialchars($best_sale['Order_Date']); ?>)
+         </p>
+       <?php endif; ?>
+   </div>
    <!-- Display notification if available -->
    <?php
    if (isset($_SESSION['success'])) {
@@ -134,35 +202,19 @@ $order_result = mysqli_query($conn, $order_query);
         <tr>
             <th>Order ID</th>
             <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price (₱)</th>
             <th>Order Date</th>
-            <th>Total Payment (₱)</th>
+            <th>Total Amount (₱)</th>
             <th>Status</th>
         </tr>
-        <?php
-        while ($order = mysqli_fetch_assoc($order_result)) {
-        ?>
+        <?php while ($order = mysqli_fetch_assoc($order_result)): ?>
         <tr>
-            <td><?php echo htmlspecialchars($order['order_id']); ?></td>
+            <td><?php echo htmlspecialchars($order['Order_ID']); ?></td>
             <td><?php echo htmlspecialchars($order['product_name']); ?></td>
-            <td><?php echo htmlspecialchars($order['quantity']); ?></td>
-            <td><?php echo htmlspecialchars($order['price']); ?></td>
-            <td><?php echo htmlspecialchars($order['order_date']); ?></td>
-            <td><?php echo htmlspecialchars($order['total_payment']); ?></td>
-            <td>
-                <form action="update_status.php" method="POST" class="status-form">
-                    <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                    <select name="status">
-                        <option value="Pending" <?php if ($order['status'] == 'Pending') echo 'selected'; ?>>Pending</option>
-                        <option value="Complete" <?php if ($order['status'] == 'Complete') echo 'selected'; ?>>Complete</option>
-                        <option value="Cancelled" <?php if ($order['status'] == 'Cancelled') echo 'selected'; ?>>Cancelled</option>
-                    </select>
-                    <button type="submit">Update</button>
-                </form>
-            </td>
+            <td><?php echo htmlspecialchars($order['Order_Date']); ?></td>
+            <td>₱<?php echo number_format($order['Total_Amount'], 2); ?></td>
+            <td><?php echo htmlspecialchars($order['Order_Status']); ?></td>
         </tr>
-        <?php } // end while ?>
+        <?php endwhile; ?>
     </table>
 </div>
 

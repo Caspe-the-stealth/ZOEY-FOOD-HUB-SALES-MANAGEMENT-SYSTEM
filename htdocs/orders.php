@@ -1,78 +1,46 @@
 <?php
-include 'db_connection.php'; // Database connection
+include 'db_connection.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Handle DELETE order request
-if (isset($_GET['delete'])) {
-    $order_id = intval($_GET['delete']);
-    $stmt = $conn->prepare("DELETE FROM orders WHERE Order_ID = ?");
-    $stmt->bind_param("i", $order_id);
+// Handle ADD order logic
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_order'])) {
+    $order_date   = $_POST['order_date'];
+    $order_status = $_POST['order_status']; // e.g., Pending, Completed, or Cancelled
+    $customer_id  = $_POST['customer_id'];
+    $product_id   = $_POST['product_id'];
+    $price        = $_POST['price'];
+    
+    // Using uppercase column names for orders table: Customer_ID and Product_ID
+    $stmt = $conn->prepare("INSERT INTO orders (Order_Date, Order_Status, Customer_ID, Product_ID, Total_Amount) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssiid", $order_date, $order_status, $customer_id, $product_id, $price);
     $stmt->execute();
+    $stmt->close();
     header("Location: orders.php");
-    exit();
+    exit;
 }
 
-// Handle ADD Order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_order'])) {
-    // Retrieve form values using the proper keys
-    $total_amount = $_POST['total_amount'];
-    $order_status = $_POST['order_status'];
-    $payment_status = $_POST['payment_status'];
-    // Make sure the input field's name is "delivery_address"
-    $delivery_address = trim($_POST['delivery_address']);
-    $user_id = $_POST['user_id']; // Expecting a valid user id
+// Fetch customers for dropdown (assuming the customers table has customer_id, first_name, last_name)
+$customerQuery = "SELECT * FROM customers";
+$customerResult = $conn->query($customerQuery);
 
-    // Check if User ID exists in users table to avoid foreign key constraint failure.
-    $user_check = $conn->prepare("SELECT id FROM users WHERE id = ?");
-    $user_check->bind_param("i", $user_id);
-    $user_check->execute();
-    $user_result = $user_check->get_result();
-    if ($user_result->num_rows == 0) {
-        echo "Error: The User ID provided does not exist.";
-        exit();
-    }
-    $user_check->close();
+// Fetch products for dropdown (assuming the products table has Product_ID, Name, Price)
+$productQuery = "SELECT * FROM products";
+$productResult = $conn->query($productQuery);
 
-    // IMPORTANT: The Payment_Status value must match the column definition in your database.
-    // For example, if your orders table defines Payment_Status as ENUM('Unpaid','Paid'),
-    // then the option "Refunded" will cause a truncation error.
-    // Either update your database column to allow "Refunded" (or other values) or adjust your form options.
-    $stmt = $conn->prepare("INSERT INTO orders (Total_Amount, Order_Status, Payment_Status, Delivery_Address, User_ID) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("dsssi", $total_amount, $order_status, $payment_status, $delivery_address, $user_id);
-    $stmt->execute();
-    header("Location: orders.php");
-    exit();
-}
-
-// Handle EDIT Order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_order'])) {
-    $order_id = intval($_POST['order_id']);
-    $total_amount = $_POST['total_amount'];
-    $order_status = $_POST['order_status'];
-    $payment_status = $_POST['payment_status'];
-    $delivery_address = trim($_POST['delivery_address']);
-
-    $stmt = $conn->prepare("UPDATE orders SET Total_Amount=?, Order_Status=?, Payment_Status=?, Delivery_Address=? WHERE Order_ID=?");
-    $stmt->bind_param("dsssi", $total_amount, $order_status, $payment_status, $delivery_address, $order_id);
-    $stmt->execute();
-    header("Location: orders.php");
-    exit();
-}
-
-// Fetch all orders
-$query = "SELECT * FROM orders ORDER BY Order_Date DESC";
+// Fetch all orders by joining orders with customers and products
+// Note: orders table columns are Customer_ID and Product_ID (uppercase) while customers use customer_id.
+$query = "SELECT o.Order_ID, o.Order_Date, o.Order_Status, 
+                 c.first_name, c.last_name, 
+                 p.Name AS ProductName, o.Total_Amount 
+          FROM orders o 
+          INNER JOIN customers c ON o.Customer_ID = c.customer_id 
+          INNER JOIN products p ON o.Product_ID = p.Product_ID 
+          ORDER BY o.Order_Date DESC";
 $result = $conn->query($query);
 if (!$result) {
     die("Database query failed: " . $conn->error);
 }
-
-
-$payment_status = $_POST['payment_status'] ?? null;
-if ($payment_status !== null) {
-    $payment_status = trim($payment_status);
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,78 +49,340 @@ if ($payment_status !== null) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Orders</title>
     <link rel="stylesheet" href="orders.css">
+    <style>
+.main-content {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: flex-start;
+    padding: 30px;
+    gap: 20px; /* Space between form and table */
+}
+
+.form-container {
+    flex-basis: 30%; /* Set form width */
+    max-width: 350px;
+}
+
+.table-container {
+    flex-grow: 1; /* Allow table to take remaining space */
+}
+
+
+    /* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: #1E1E1E;
+    height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar .logo-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar .logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 14px 25px;
+    color: #CCCCCC;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.3s ease-in-out;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #333333;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.sidebar ul li a i {
+    margin-right: 15px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 270px;
+    padding: 30px;
+    width: calc(100% - 270px);
+    background: #181818;
+    min-height: 100vh;
+}
+
+/* Heading */
+h2 {
+    text-align: center;
+    color: #F0F0F0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: #4DA8DA;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #77D7F9;
+    text-decoration: underline;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #222;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead th {
+    background-color: #444;
+    color: #FFFFFF;
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+}
+
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #333;
+    color: #E0E0E0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #2A2A2A;
+}
+
+tbody tr:hover {
+    background-color: #3A3A3A;
+}
+
+/* Action Buttons */
+.action-icons {
+    font-size: 18px;
+    transition: 0.3s;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.action-icons.edit {
+    color: #4CAF50;
+}
+
+.action-icons.edit:hover {
+    color: #66FF66;
+}
+
+.action-icons.delete {
+    color: #E53935;
+}
+
+.action-icons.delete:hover {
+    color: #FF6666;
+}
+
+/* Form Styling */
+.form-container {
+    background: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 2px 2px 15px rgba(255, 255, 255, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    border: none;
+    border-radius: 5px;
+    background: #2D2D2D;
+    color: #E0E0E0;
+    font-size: 16px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(77, 168, 218, 0.5);
+}
+
+button {
+    background-color: #4DA8DA;
+    color: #FFF;
+    border: none;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: 0.3s;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #77D7F9;
+}
+
+/* Form Title */
+h3.form-title {
+    font-size: 20px;
+    color: #F0F0F0;
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 220px;
+    }
+
+    .form-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}
+</style>
 </head>
 <body>
-<div class="sidebar">
-    <div class="logo-container">
-        <img src="logo.png" alt="Zoey Food Hub Logo" class="logo">
-        <h2>ZOEY FOOD HUB</h2>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%;">
+            <h2>ZOEY FOOD HUB</h2>
+        </div>
+        <ul>
+            <li><a href="admin_dashboard.php">Dashboard</a></li>
+            <li><a href="customers.php">Customers</a></li>
+            <li><a href="product.php">Product</a></li>
+            <li><a href="orders.php">Orders</a></li>
+            <li><a href="sales.php">Sales Records</a></li>
+            <li><a href="login.php">Logout</a></li>
+        </ul>
     </div>
-    <ul>
-        <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
-        <li><a href="product.php"><i class="fas fa-box"></i> Product</a></li>
-        <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-        <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales Records</a></li>
-        <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-        <li><a href="#"><i class="fas fa-cogs"></i> Settings</a></li>
-        <li><a href="login.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <h2>Manage Orders</h2>
-
-    <!-- Add Order Form -->
-    <form action="orders.php" method="post">
-        <input type="number" name="total_amount" step="0.01" placeholder="Total Amount" required>
-        <select name="order_status">
-            <option value="Pending">Pending</option>
-            <option value="Processing">Processing</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-        </select>
-        <select name="payment_status">
-            <!-- Adjust these options to match your database column definition -->
-            <option value="Unpaid">Unpaid</option>
-            <option value="Paid">Paid</option>
-            <option value="Refunded">Refunded</option>
-        </select>
-        <!-- Make sure the input name is "delivery_address" to match $_POST['delivery_address'] -->
-        <input type="text" name="delivery_address" placeholder="Address" required>
-        <input type="number" name="user_id" placeholder="User ID" required>
-        <button type="submit" name="add_order">Add Order</button>
-    </form>
-
-    <table>
-        <tr>
-            <th>Order ID</th>
-            <th>Order Date</th>
-            <th>Total Amount</th>
-            <th>Order Status</th>
-            <th>Payment Status</th>
-            <th>Address</th>
-            <th>User ID</th>
-            <th>Actions</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= htmlspecialchars($row['Order_ID']); ?></td>
-                <td><?= htmlspecialchars($row['Order_Date']); ?></td>
-                <td>₱<?= number_format($row['Total_Amount'], 2); ?></td>
-                <td><?= htmlspecialchars($row['Order_Status']); ?></td>
-                <td><?= htmlspecialchars($row['Payment_Status']); ?></td>
-                <td><?= htmlspecialchars($row['Delivery_Address']); ?></td>
-                <td><?= htmlspecialchars($row['User_ID']); ?></td>
-                <td>
-                    <a href="edit_order.php?id=<?= $row['Order_ID']; ?>" class="edit-btn">Edit</a>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    </table>
-</div>
-
+    
+    <div class="main-content">
+        <!-- Left Side: Add Order Form -->
+        <div class="form-container">
+            <h2>Add Order</h2>
+            <form action="orders.php" method="post">
+                <label>Order Date:</label>
+                <input type="date" name="order_date" required>
+                
+                <label>Order Status:</label>
+                <select name="order_status" required>
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                
+                <label>Select Customer:</label>
+                <select name="customer_id" required>
+                    <option value="">Select Customer</option>
+                    <?php while ($cust = $customerResult->fetch_assoc()): ?>
+                        <option value="<?= $cust['customer_id']; ?>">
+                            <?= htmlspecialchars($cust['first_name'] . ' ' . $cust['last_name']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                
+                <label>Select Product:</label>
+                <select name="product_id" required>
+                    <option value="">Select Product</option>
+                    <?php while ($prod = $productResult->fetch_assoc()): ?>
+                        <option value="<?= $prod['Product_ID']; ?>">
+                            <?= htmlspecialchars($prod['Name']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                
+                <label>Total Amount:</label>
+                <input type="number" name="price" step="0.01" placeholder="Price" required>
+                <br><br>
+                <button type="submit" name="add_order">Add Order</button>
+            </form>
+        </div>
+        
+        <!-- Right Side: Orders Table -->
+        <div class="table-container">
+            <h2>Orders List</h2>
+            <table>
+                <tr>
+                    <th>Order Date</th>
+                    <th>Customer</th>
+                    <th>Product Name</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['Order_Date']); ?></td>
+                        <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
+                        <td><?= htmlspecialchars($row['ProductName']); ?></td>
+                        <td>₱<?= number_format($row['Total_Amount'], 2); ?></td>
+                        <td><?= htmlspecialchars($row['Order_Status']); ?></td>
+                        <td>
+                            <a href="edit_order.php?id=<?= $row['Order_ID']; ?>" class="edit-btn">Edit</a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
-
-<?php $conn->close(); ?>

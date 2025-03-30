@@ -99,18 +99,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label>Role</label>
+              
                 <select name="role" required>
-                    <option value="">Select Role</option>
+                   
                     <option value="admin">Admin</option>
-                    <option value="customer">Customer</option>
+                   
                 </select>
             </div>
 
             <button type="submit">Login</button>
         </form>
 
-        <p class="footer-text">Don't have an account? <a href="register.php">Sign up</a></p>
+     
     </div>
 </div>
 

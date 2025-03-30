@@ -58,17 +58,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     <div class="sidebar">
         <div class="logo-container">
-            <img src="logo.png" alt="Zoey Food Hub Logo" class="logo">
+        <img src="images (1).png" alt="Zoey Food Hub Logo" style="width:150px; height:150px; border-radius:50%; object-fit:cover; display:block; margin:auto;">
+
             <h2>ZOEY FOOD HUB</h2>
         </div>
         <ul>
             <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
             <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales Records</a></li>
-            <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-            <li><a href="#"><i class="fas fa-cogs"></i> Settings</a></li>
             <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
         </ul>
     </div>

@@ -64,8 +64,27 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Management</title>
     <link rel="stylesheet" href="styles.css">
+
     <style>
-       /* General Styles */
+.main-content {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: flex-start;
+    padding: 30px;
+    gap: 20px; /* Space between form and table */
+}
+
+.form-container {
+    flex-basis: 30%; /* Set form width */
+    max-width: 350px;
+}
+
+.table-container {
+    flex-grow: 1; /* Allow table to take remaining space */
+}
+
+
+    /* General Styles */
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #121212;
@@ -90,9 +109,20 @@ body {
     box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
 }
 
+.sidebar .logo-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
 .sidebar .logo {
     width: 150px;
     margin-bottom: 20px;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    color: #FFFFFF;
+    margin: 0;
 }
 
 .sidebar ul {
@@ -136,6 +166,7 @@ h2 {
     text-align: center;
     color: #F0F0F0;
     margin-bottom: 25px;
+    font-size: 24px;
 }
 
 /* Links */
@@ -182,14 +213,6 @@ tbody tr:hover {
     background-color: #3A3A3A;
 }
 
-/* Image Styling */
-img {
-    max-width: 80px;
-    height: auto;
-    border-radius: 6px;
-    box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
-}
-
 /* Action Buttons */
 .action-icons {
     font-size: 18px;
@@ -215,19 +238,25 @@ img {
 }
 
 /* Form Styling */
-form {
+.form-container {
     background: #242424;
     padding: 20px;
     border-radius: 8px;
-    max-width: 500px;
+    max-width: 600px;
     margin: auto;
     box-shadow: 2px 2px 15px rgba(255, 255, 255, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 input, textarea, select {
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin: 0;
     border: none;
     border-radius: 5px;
     background: #2D2D2D;
@@ -249,61 +278,59 @@ button {
     border-radius: 5px;
     font-size: 16px;
     transition: 0.3s;
+    width: 100%;
 }
 
 button:hover {
     background-color: #77D7F9;
 }
 
-    </style>
+/* Form Title */
+h3.form-title {
+    font-size: 20px;
+    color: #F0F0F0;
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 220px;
+    }
+
+    .form-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}
+</style>
 </head>
 <body>
 
-
 <div class="sidebar">
-        <div class="logo-container">
-            <img src="logo.png" alt="Zoey Food Hub Logo" class="logo">
+<div class="logo-container">
+<img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
             <h2>ZOEY FOOD HUB</h2>
         </div>
         <ul>
             <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
             <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
             <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales Records</a></li>
-            <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-            <li><a href="#"><i class="fas fa-cogs"></i> Settings</a></li>
             <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
         </ul>
     </div>
-
-    <h2>Customer List</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Actions</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-        <tr>
-            <td><?= htmlspecialchars($row['customer_id']); ?></td>
-            <td><?= htmlspecialchars($row['first_name']); ?></td>
-            <td><?= htmlspecialchars($row['last_name']); ?></td>
-            <td><?= htmlspecialchars($row['email']); ?></td>
-            <td><?= htmlspecialchars($row['phone']); ?></td>
-            <td><?= htmlspecialchars($row['address']); ?></td>
-            <td class="action-links">
-                <a href="customers.php?edit=<?= $row['customer_id']; ?>">Edit</a>
-            </td>
-        </tr>
-        <?php endwhile; ?>
-    </table>
-
+    <div class="main-content">
+    <!-- Add Customer Form (Left Side) -->
     <div class="form-container">
         <h2><?= $form_action == "edit_customer" ? "Edit Customer" : "Add New Customer"; ?></h2>
         <form action="customers.php" method="post">
@@ -318,7 +345,36 @@ button:hover {
             <button type="submit" name="<?= $form_action; ?>"><?= $form_action == "edit_customer" ? "Update" : "Add"; ?> Customer</button>
         </form>
     </div>
+
+    <!-- Customer List (Right Side) -->
+    <div class="table-container">
+        <h2>Customer List</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+            <?php while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?= htmlspecialchars($row['customer_id']); ?></td>
+                <td><?= htmlspecialchars($row['first_name']); ?></td>
+                <td><?= htmlspecialchars($row['last_name']); ?></td>
+                <td><?= htmlspecialchars($row['email']); ?></td>
+                <td><?= htmlspecialchars($row['phone']); ?></td>
+                <td><?= htmlspecialchars($row['address']); ?></td>
+                <td class="action-links">
+                    <a href="customers.php?edit=<?= $row['customer_id']; ?>">Edit</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </table>
+    </div>
 </body>
 </html>
 
-<?php $conn->close(); ?>
+
