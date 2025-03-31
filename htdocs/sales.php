@@ -2,7 +2,6 @@
 session_start();
 include 'db_connection.php'; // Ensure this file connects to your database
 
-
 // Handle product addition to cart (if coming from, for example, a product list)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
     $product_id    = $_POST['product_id'];
@@ -252,13 +251,13 @@ tbody tr:hover {
             <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
-            <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales Records</a></li>
+            <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales</a></li>
             <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
         </ul>
     </div>
 
 <div class="main-content">
-   <h2>Sales Records</h2>
+   <h1>Sales Records</h1>
    <!-- Display notification if available -->
    <?php
    if (isset($_SESSION['success'])) {

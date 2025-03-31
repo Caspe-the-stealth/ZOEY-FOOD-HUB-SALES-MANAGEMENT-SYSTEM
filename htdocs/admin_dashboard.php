@@ -180,7 +180,7 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="product.php"><i class="fas fa-box"></i> Products</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
-            <li><a href="sales.php"><i class="fas fa-chart-pie"></i> Sales Records</a></li>
+            <li><a href="sales.php"><i class="fas fa-chart-pie"></i> Sales</a></li>
             <li><a href="index.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>

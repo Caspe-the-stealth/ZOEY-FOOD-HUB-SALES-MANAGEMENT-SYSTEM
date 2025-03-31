@@ -86,7 +86,7 @@ if (!$result) {
                 <select name="product_id" required>
                     <option value="">Select Product</option>
                     <?php while ($prod = $productResult->fetch_assoc()): ?>
-                        <option value="<?= $prod['Product_ID']; ?>">
+                        <option value="<?= $prod['Product_ID']; ?>" data-price="<?= htmlspecialchars($prod['Price']); ?>">
                             <?= htmlspecialchars($prod['Name']); ?>
                         </option>
                     <?php endwhile; ?>
@@ -104,7 +104,6 @@ if (!$result) {
             <h2>Orders List</h2>
             <table>
                 <tr>
-                    <th>Order Date</th>
                     <th>Customer</th>
                     <th>Product Name</th>
                     <th>Total Amount</th>
@@ -113,7 +112,6 @@ if (!$result) {
                 </tr>
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
-                        <td><?= htmlspecialchars($row['Order_Date']); ?></td>
                         <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
                         <td><?= htmlspecialchars($row['ProductName']); ?></td>
                         <td>₱<?= number_format($row['Total_Amount'], 2); ?></td>
@@ -126,5 +124,11 @@ if (!$result) {
             </table>
         </div>
     </div>
+    <script>
+    document.querySelector('select[name="product_id"]').addEventListener('change', function(){
+        var price = this.options[this.selectedIndex].getAttribute('data-price') || '';
+        document.querySelector('input[name="price"]').value = price;
+    });
+    </script>
 </body>
 </html>
