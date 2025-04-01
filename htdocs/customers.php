@@ -296,9 +296,9 @@ body {
                 <th>Address</th>
                 <th>Actions</th>
             </tr>
-            <?php while ($row = $result->fetch_assoc()): ?>
+            <?php $i = 1; while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?= htmlspecialchars($row['customer_id']); ?></td>
+                <td><?= $i++; ?></td>
                 <td><?= htmlspecialchars($row['first_name']); ?></td>
                 <td><?= htmlspecialchars($row['last_name']); ?></td>
                 <td><?= htmlspecialchars($row['email']); ?></td>

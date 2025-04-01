@@ -1,7 +1,7 @@
 /* Main Content Container */
 .main-content {
     margin-left: 270px;
-    padding: 30px;
+    padding: 0px;
     display: flex;
     flex-wrap: wrap; /* Allow wrapping on small screens */
     gap: 20px; /* Space between form and table */
@@ -26,7 +26,7 @@
 
 /* Table Styles */
 table {
-    width: 100%;
+    width: 99%;
     border-collapse: collapse;
     background-color: #222;
     margin-bottom: 20px;
@@ -70,7 +70,7 @@ tbody tr:hover {
         width: 200px;
     }
     .main-content {
-        margin-left: 220px;
+        margin-left: 210px;
     }
     h2 {
         font-size: 22px;

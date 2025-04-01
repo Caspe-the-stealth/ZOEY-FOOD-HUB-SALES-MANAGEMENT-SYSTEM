@@ -62,6 +62,7 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             padding: 0;
             /* Prevent scrolling */
             overflow: hidden;
+            
         }
         .sidebar {
             width: 250px;
@@ -129,20 +130,23 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             gap: 20px;
         }
         .stats {
+            
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             margin-bottom: 35px;
         }
         .stats-card {
+            
             background: #242424;
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 2px 2px 15px rgba(255, 255, 255, 0.1);
             flex: 2;
             min-width: 200px;
             text-align: center;
             font-size: 16px;
+            
         }
         .stats-card h2 {
             font-size: 22px;
@@ -199,6 +203,7 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             <div class="notification"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
         <?php endif; ?>
         <section class="stats">
+            
             <div class="stats-card">
                 <h2>Total Sales</h2>
                 <p>₱<?php echo number_format($totalSales, 2); ?></p>

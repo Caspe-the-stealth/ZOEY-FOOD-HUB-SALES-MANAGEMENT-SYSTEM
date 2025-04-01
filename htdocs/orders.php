@@ -50,6 +50,143 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Orders</title>
+    <style>
+        /* Hide all scrollbars */
+        body {
+            overflow: hidden; // hide vertical & horizontal scroll
+            margin: 0;
+            padding: 0;
+        }
+        /* Main content adjusted */
+        .main-content {
+            height: 100px; /* reduced overall height */
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+            overflow: hidden;
+        }
+        .main-content {
+    margin-left: 270px;
+    padding: 0px;
+    width: calc(100% - 270px);
+    background: #181818;
+    min-height: 99vh;
+}
+        /* Reduce width for balanced layout */
+        .form-container,
+        .table-container {
+            width: 50%; /* reduced width for both sections */
+            background: #2C2C2C; // eye-catching background
+            padding: 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        /* Revised styling for the Add Order form */
+        .form-container {
+            background: #242424; // consistent admin theme color
+            padding: 11px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.3s;
+        }
+        .form-container:hover {
+            transform: scale(1.02);         // subtle hover scale effect
+        }
+        .form-container h2 {
+            color: #F0F0F0;
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .form-container form {
+            width: 100%;
+            max-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        .form-container form button {
+            width: 100%;
+            padding: 10px; /* button clearly visible */
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .form-container form button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Adjust form elements for improved consistency and appearance */
+        .form-container form label {
+            color: #F0F0F0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .form-container form input,
+        .form-container form select {
+            width: 100%;
+            padding: 10px;
+            background: #181818;
+            color: #E0E0E0;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 1px;
+            height: 100;
+        }
+        .form-container form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1px;
+        }
+        .form-container form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Adjustments for the Orders List table */
+        .table-container {
+            background: #242424; // matching admin card
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-container th,
+        .table-container td {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+            text-align: left;
+            color: #F0F0F0;
+        }
+        .table-container th {
+            background: #1E1E1E;
+            font-size: 16px;
+        }
+        .table-container tr:hover {
+            background: #333;
+        }
+    </style>
 </head>
 <body>
 <div class="sidebar">
@@ -106,8 +243,10 @@ if (!$result) {
                 
                 <label>Total Amount:</label>
                 <input type="number" name="price" step="0.01" placeholder="Price" required>
-                <br><br>
                 <button type="submit" name="add_order">Add Order</button>
+                <br>
+                <br>
+                <br>
             </form>
         </div>
         
@@ -134,8 +273,10 @@ if (!$result) {
                     </tr>
                 <?php endwhile; ?>
             </table>
+        
         </div>
     </div>
+
     <script>
     document.querySelector('select[name="product_id"]').addEventListener('change', function(){
         var price = this.options[this.selectedIndex].getAttribute('data-price') || '';
