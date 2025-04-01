@@ -6,7 +6,7 @@
     flex-wrap: wrap; /* Allow wrapping on small screens */
     gap: 20px; /* Space between form and table */
     background: #181818;
-    min-height: 100vh;
+    min-height: 60px auto;
 }
 
 /* Form Container (Left Side) */

@@ -157,75 +157,68 @@ tbody tr:hover {
     margin: 0;
     padding: 0;
 }
-
-/* Sidebar improvements */
-.sidebar {
-    width: 250px;
-    background: #1E1E1E;
-    height: 100vh;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
-    transition: background-color 0.3s ease;
-}
-
-.sidebar:hover {
-    background: #171717;
-}
-
-.logo-container {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.logo {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #fff;
-    transition: transform 0.3s ease;
-}
-
-.logo:hover {
-    transform: scale(1.05);
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-}
-
-.sidebar ul li {
-    width: 100%;
-}
-
-.sidebar ul li a {
-    display: flex;
-    align-items: center;
-    padding: 14px 25px;
-    color: #CCCCCC;
-    text-decoration: none;
-    font-size: 18px;
-    transition: background-color 0.3s, color 0.3s;
-    border-left: 3px solid transparent;
-}
-
-/* Updated sidebar link hover/active styles for smoother transition */
-.sidebar ul li a:hover,
-.sidebar ul li a.active {
-    background: #2F2F2F; // Softer background
-    color: #E0E0E0;      // Softer text color
-    font-weight: normal; // Avoid harsh boldness
-    border-left: 3px solid #5C5C5C; // Subtle border highlight
-}
+   /* Sidebar and general styling */
+   body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 250px;
+            background: #1E1E1E;
+            height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
+        }
+        .sidebar .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sidebar .logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: auto;
+        }
+        .sidebar h2 {
+            font-size: 24px;
+            color: #FFFFFF;
+            margin: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 14px 25px;
+            color: #CCCCCC;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s ease-in-out;
+        }
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background: #333333;
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+        .sidebar ul li a i {
+            margin-right: 15px;
+        }
 
 /* Main Content */
 .main-content {
@@ -244,12 +237,13 @@ tbody tr:hover {
 <div class="sidebar">
 <div class="logo-container">
 <img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
-            <h2>ZOEY FOOD HUB</h2>
+<br>          
+<h2>ZOEY FOOD HUB</h2>
         </div>
         <ul>
             <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
-            <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
+            <li><a href="product.php"><i class="fas fa-users"></i> Products</a></li>
             <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
             <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales</a></li>
             <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>

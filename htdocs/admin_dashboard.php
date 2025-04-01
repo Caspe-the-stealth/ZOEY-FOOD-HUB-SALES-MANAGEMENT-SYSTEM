@@ -60,11 +60,14 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             color: #E0E0E0;
             margin: 0;
             padding: 0;
+            /* Prevent scrolling */
+            overflow: hidden;
         }
         .sidebar {
             width: 250px;
             background: #1E1E1E;
-            height: 100vh;
+            height: auto;
+            min-height: 100vh;
             color: white;
             display: flex;
             flex-direction: column;
@@ -117,25 +120,29 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
         }
         /* Main Content */
         .main-content {
-            margin-left: 270px;
-            padding: 30px;
+            margin-left: 240px;
+            padding: 35px;
             background: #181818;
+            max-height: 100vh;
+            overflow-y: auto;
             min-height: 100vh;
+            gap: 20px;
         }
         .stats {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 40px;
+            gap: 15px;
+            margin-bottom: 35px;
         }
         .stats-card {
             background: #242424;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 2px 2px 15px rgba(255, 255, 255, 0.1);
-            flex: 1;
+            flex: 2;
             min-width: 200px;
             text-align: center;
+            font-size: 16px;
         }
         .stats-card h2 {
             font-size: 22px;
@@ -148,10 +155,10 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
         }
         .chart-section {
             background: #242424;
-            padding: 20px;
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 2px 2px 15px rgba(255, 255, 255, 0.1);
-            max-width: 800px;
+            max-width: 700px;
             margin: auto;
         }
         .chart-section h2 {
@@ -173,7 +180,8 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
     <div class="sidebar">
         <div class="logo-container">
         <img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
-            <h2>ZOEY FOOD HUB</h2>
+           <br>
+        <h2>ZOEY FOOD HUB</h2>
         </div>
         <ul>
             <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -183,7 +191,9 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             <li><a href="sales.php"><i class="fas fa-chart-pie"></i> Sales</a></li>
             <li><a href="index.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
+
     </div>
+    
     <div class="main-content">
         <?php if(isset($_SESSION['success'])): ?>
             <div class="notification"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
@@ -211,6 +221,7 @@ if ($resultBestProduct && $row = $resultBestProduct->fetch_assoc()) {
             <canvas id="salesChart"></canvas>
         </section>
     </div>
+    <br>
     <footer style="text-align: center; padding: 20px; background: #1E1E1E; color: #CCCCCC;">
         <p>&copy; <?php echo date("Y"); ?> Zoey Food Hub Sales Management System</p>
     </footer>

@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Start output buffering to avoid "headers already sent" error
 include 'db_connection.php';
 include 'side_admin.php';
 error_reporting(E_ALL);
@@ -49,11 +50,22 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Orders</title>
-
-
 </head>
 <body>
-  
+<div class="sidebar">
+<div class="logo-container">
+<img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
+<br>  
+<h2>ZOEY FOOD HUB</h2>
+        </div>
+        <ul>
+            <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
+            <li><a href="product.php"><i class="fas fa-users"></i> Products</a></li>
+            <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
+            <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales</a></li>
+            <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
+        </ul>
     </div>
     
     <div class="main-content">
@@ -130,5 +142,8 @@ if (!$result) {
         document.querySelector('input[name="price"]').value = price;
     });
     </script>
+<?php
+ob_end_flush();
+?>
 </body>
 </html>

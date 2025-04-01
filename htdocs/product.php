@@ -21,29 +21,16 @@ while ($row = $categoryResult->fetch_assoc()) {
   <link rel="stylesheet" href="product.css"> <!-- External CSS if needed -->
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
-    /* Reset & General */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #121212;
-      color: #E0E0E0;
-    }
-    h1, h2, h3 {
-      margin-bottom: 20px;
-    }
-    a {
-      text-decoration: none;
-      color: #4DA8DA;
-      transition: 0.3s;
-    }
-    a:hover {
-      color: #77D7F9;
-    }
-    .sidebar {
+        /* Sidebar and general styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; // prevent page scroll
+        }
+        .sidebar {
             width: 250px;
             background: #1E1E1E;
             height: 100vh;
@@ -100,9 +87,10 @@ while ($row = $categoryResult->fetch_assoc()) {
         /* Main Content */
         .main-content {
             margin-left: 270px;
-            padding: 30px;
+            padding: 15px;  // reduced padding for compact layout
             background: #181818;
-            min-height: 100vh;
+            max-height: 100vh; // force main content to fit within viewport height
+            overflow-y: auto; // allow internal scrolling if needed
         }
     .main-content button {
       margin-bottom: 20px;
@@ -126,7 +114,7 @@ while ($row = $categoryResult->fetch_assoc()) {
       background-color: #222;
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     thead th {
       background-color: #444;
@@ -242,6 +230,19 @@ while ($row = $categoryResult->fetch_assoc()) {
       background-color: #77D7F9;
     }
     
+    /* Revert edit link styling to plain link styling */
+    .action-icons {
+        text-decoration: underline;
+        background: none;
+        padding: 0;
+        border: none;
+        color: #4DA8DA;
+    }
+    .action-icons:hover {
+        text-decoration: none;
+        color: #77D7F9;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar {
@@ -269,12 +270,13 @@ while ($row = $categoryResult->fetch_assoc()) {
   <div class="sidebar">
     <div class="logo-container">
     <img src="images (1).png" alt="Zoey Food Hub Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">
-      <h2>ZOEY FOOD HUB</h2>
+    <br>
+    <h2>ZOEY FOOD HUB</h2>
     </div>
     <ul>
       <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
       <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
-      <li><a href="product.php"><i class="fas fa-users"></i> Product</a></li>
+      <li><a href="product.php"><i class="fas fa-users"></i> Products</a></li>
       <li><a href="orders.php"><i class="fas fa-chart-line"></i> Orders</a></li>
       <li><a href="sales.php"><i class="fas fa-chart-line"></i> Sales </a></li>
       <li><a href="login.php"><i class="fas fa-cogs"></i> Logout</a></li>
@@ -305,7 +307,7 @@ while ($row = $categoryResult->fetch_assoc()) {
             <td><?= $row['Stock_Quantity']; ?></td>
             <td><?= $row['Category']; ?></td>
             <td>
-              <a href="edit_product.php?id=<?= $row['Product_ID']; ?>" class="action-icons edit">✏️</a>
+              <a href="edit_product.php?id=<?= $row['Product_ID']; ?>" class="action-icons edit">Edit</a>
             </td>
           </tr>
         <?php endwhile; ?>
